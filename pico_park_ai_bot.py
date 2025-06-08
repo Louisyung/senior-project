@@ -35,18 +35,17 @@ def detect_color_blocks(img, lower, upper):
 def press_random_key():
     from pynput.keyboard import Controller, Key
     keyboard = Controller()
-    keys = [ 'right', 'up', 'down', 'space', 'd']
+    keys = [ 'right', 'up', 'space', 'd']
     key_map = {
         'right': Key.right,
         'up': Key.up,
-        'down': Key.down,
         'space': Key.space,
-        'd': 'd'
+         'd': 'd'
     }
     k = random.choice(keys)
     print(f"按下 {k}")
     keyboard.press(key_map[k])
-    time.sleep(0.1)
+    time.sleep(0.25)
     keyboard.release(key_map[k])
 
 # 設定顏色範圍（ex. 紅色角色）
