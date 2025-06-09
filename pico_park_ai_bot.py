@@ -46,23 +46,22 @@ def find_players(frame, templates, threshold=0.8):
             results.append((name, top_left, bottom_right, max_val))
     return results
 
-def press_random_key():
+def press_players_keys(player1_keys, player2_keys, hold_time=0.35):
     from pynput.keyboard import Controller, Key
     keyboard = Controller()
-    keys = ['right', 'up', 'space', 'd', 'a', 'w']
     key_map = {
         'right': Key.right,
         'up': Key.up,
-        'space': Key.space,
         'd': 'd',
-        'a': 'a',
-        'w': 'w'
+        'space': Key.space
     }
-    k = random.choice(keys)
-    print(f"按下 {k}")
-    keyboard.press(key_map[k])
-    time.sleep(0.25)
-    keyboard.release(key_map[k])
+    # 按下所有指定按鍵
+    for k in player1_keys + player2_keys:
+        keyboard.press(key_map[k])
+    print(f"player1: {player1_keys}, player2: {player2_keys}")
+    time.sleep(hold_time)
+    for k in player1_keys + player2_keys:
+        keyboard.release(key_map[k])
 
 lower_red = np.array([0, 120, 70])
 upper_red = np.array([10, 255, 255])
@@ -94,7 +93,12 @@ while True:
         cv2.putText(frame, f"{name}:{score:.2f}", (top_left[0], top_left[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
         print(f"{name} 位置: {top_left}, 相似度: {score:.2f}")
 
-    press_random_key()
+    # 隨機同時控制兩個角色
+    player1_actions = [[], ['right'], ['up'], ['right', 'up']]
+    player2_actions = [[], ['d'], ['space'], ['d', 'space']]
+    p1_keys = random.choice(player1_actions)
+    p2_keys = random.choice(player2_actions)
+    press_players_keys(p1_keys, p2_keys)
 
     cv2.imshow("Pico Park AI View", frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
